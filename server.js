@@ -2,9 +2,14 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors'); // 1. Added the CORS package
 require('dotenv').config();
 
 const app = express();
+
+// 2. Enable CORS (This is the magic line that fixes your error!)
+app.use(cors());
+
 const PORT = process.env.PORT || 3000;
 
 // Limit payload size to slightly mitigate DoS
@@ -21,6 +26,7 @@ const apiLimiter = rateLimit({
 });
 
 // MongoDB Connection
+// Note: Make sure MONGODB_URI is set in your Render Environment Variables!
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kudo_registration';
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -97,5 +103,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Erode District Kudo Sports Association site running at http://localhost:${PORT}`);
+  console.log(`Erode District Kudo Sports Association API running on port ${PORT}`);
 });
