@@ -64,7 +64,11 @@ app.post('/api/register', apiLimiter, async (req, res) => {
 
     const iso = ts || new Date().toISOString();
     const dt = new Date(iso);
-    const localTime = Number.isNaN(dt.valueOf()) ? '' : dt.toLocaleString();
+    
+    // UPDATED: Force the server to format the time in Indian Standard Time (IST)
+    const localTime = Number.isNaN(dt.valueOf()) 
+      ? '' 
+      : dt.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
     const newDoc = new Registration({
       timestampISO: iso,
